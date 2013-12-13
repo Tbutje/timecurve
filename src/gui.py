@@ -2,6 +2,7 @@ import Tkinter, tkMessageBox, csv
 from generate_csv import Generate_csv
 import sys
 from datetime import datetime
+from dialog_filechooser import FileDialogExample
 
 class Gui(Tkinter.Tk):
     def __init__(self,parent):
@@ -34,6 +35,9 @@ class Gui(Tkinter.Tk):
         button_q = Tkinter.Button(self,text="Quit",
                                 command=self.quit)
 
+        select_input = Tkinter.Button(self,text="Select input",
+                                command=self.select_input)
+
 
         self.labelVariable = Tkinter.StringVar()
         label = Tkinter.Label(self,textvariable=self.labelVariable,
@@ -42,7 +46,7 @@ class Gui(Tkinter.Tk):
         self.labelVariable.set("Time curve program")
 
         # LABELS & BUTTONS
-        Tkinter.Label(self, text="input file:").grid(row=0, sticky= "we")
+    #    Tkinter.Label(self, text="input file:").grid(row=0, sticky= "we")
         Tkinter.Label(self, text="output file:").grid(row=1)
         Tkinter.Label(self, text="").grid(row=2)
 
@@ -55,6 +59,7 @@ class Gui(Tkinter.Tk):
         label.grid(column=0,row=9,columnspan=2,sticky='WE')
         button_a.grid(column=0,row=10,sticky= "WE")
         button_q.grid(column=1,row=10, sticky= "WE")
+        select_input.grid(row = 0, column = 0, sticky = "WE")
 
         # INPUT
         self.input = Tkinter.Entry(self)
@@ -117,6 +122,7 @@ class Gui(Tkinter.Tk):
 
             self.labelVariable.set("Time curve generated at " +
                                     datetime.now().strftime("%X"))
+            self.save_settings()
         # wrong values
         except ValueError:
             tkMessageBox.showwarning(
@@ -131,16 +137,23 @@ class Gui(Tkinter.Tk):
                 "cant find input file, please try again"
             )
 
+    ## Helper functions #######################################################
+
 
     def quit(self):
         self.destroy()
 
     def save_settings(self):
-        with open("conf.cfg", 'wb') as file:
+        with open("conf.cfg", 'w') as file:
             writer = csv.writer(file)
-            writer.writerows([("input", input), ("output", output), ("year", year),
-            ("month", month), ("day", day), ("hour", hour), ("minute", minute),
-            ("second", second)])
+            writer.writerows([("input", self.input), ("output", self.output), ("year", self.year),
+            ("month", self.month), ("day", self.day), ("hour", self.hour), ("minute", self.minute),
+            ("second", self.second)])
+
+    def select_input(self):
+        TkFileDialogExample(root).pack()
+       # name = FileDialogExample()
+        #self.input.insert(0,name)
 
 
 if __name__ == "__main__":
