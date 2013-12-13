@@ -33,6 +33,7 @@ class Gui(Tkinter.Tk):
 
         # needed for grid init
         self.grid()
+        self.geometry("400x300")
         self.bind("<Return>", self.apply)
 
 
@@ -45,6 +46,9 @@ class Gui(Tkinter.Tk):
         select_input = Tkinter.Button(self,text="Select input",
                                 command=self.select_input)
 
+        select_output = Tkinter.Button(self,text="Select output",
+                                command=self.select_output)
+
 
         self.labelVariable = Tkinter.StringVar()
         label = Tkinter.Label(self,textvariable=self.labelVariable,
@@ -54,7 +58,6 @@ class Gui(Tkinter.Tk):
 
         # LABELS & BUTTONS
 
-        Tkinter.Label(self, text="output file:").grid(row=1)
         Tkinter.Label(self, text="").grid(row=2)
 
         Tkinter.Label(self, text="year").grid(row=3)
@@ -67,6 +70,7 @@ class Gui(Tkinter.Tk):
         button_a.grid(column=0,row=10,sticky= "W")
         button_q.grid(column=1,row=10, sticky= "W")
         select_input.grid(row = 0, column = 0, sticky = "WE")
+        select_output.grid(row = 1, column = 0, sticky = "WE")
 
         # INPUT
         self.input = Tkinter.Entry(self)
@@ -106,13 +110,11 @@ class Gui(Tkinter.Tk):
         self.resizable(True,False)
         return self.input.focus()
 
-
-
     def apply(self, *args):
 
         try:
             f_in = self.input.get()
-            open(input, 'rb')
+
             output = self.output.get()
             year = int(self.year.get())
             month = int(self.month.get())
@@ -153,7 +155,6 @@ class Gui(Tkinter.Tk):
     def save_settings(self):
 
         f_in = self.input.get()
-        open(input, 'rb')
         output = self.output.get()
         year = int(self.year.get())
         month = int(self.month.get())
@@ -171,8 +172,18 @@ class Gui(Tkinter.Tk):
     def select_input(self):
 
         name = filechooser.askopenfilename()
-        self.input.delete(0, Tkinter.END)
-        self.input.insert(0,name)
+        if name:
+            self.input.delete(0, Tkinter.END)
+            self.input.insert(0,name)
+
+    def select_output(self):
+
+        name = filechooser.asksavefilename()
+        if name:
+            self.output.delete(0, Tkinter.END)
+            self.output.insert(0,name)
+
+
 
 if __name__ == "__main__":
     app = Gui(None)

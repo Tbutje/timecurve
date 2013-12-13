@@ -4,7 +4,6 @@ import sys
 import tkMessageBox
 
 
-
 # from gui import MyDialog
 # add "prof" as command line argument to profile program
 ######### profiling options ###################################################
@@ -71,7 +70,10 @@ class Generate_csv(object):
         try:
             f = open(self.output_file, "wb")
         except:
-            raise Exception("could not open output file")
+            tkMessageBox.showwarning(
+                "error",
+                "cannot open output file")
+
         writer = csv.writer(f)
         writer.writerow(["date(dd-mm-yyy)","time(hh:mm:ss)","channel(1-40)",
                 "intensity(%)","interval(sec.)"])
@@ -83,9 +85,17 @@ class Generate_csv(object):
             else:
                 end = 1
             for chan in xrange(0, end):
-                writer.writerow([(str(self.date_time[idx].day) + "-" +  str(self.date_time[idx].month) + "-"  + str(self.date_time[idx].year)),
-                                (str(self.date_time[idx].hour) + ":" +  str(self.date_time[idx].minute) + ":"  + str(self.date_time[idx].second)),
-                                int(self.channel[idx]) + (chan ) * 10 , self.intensity[idx], self.interval[idx]])
+                writer.writerow([
+                                 # day-month-year
+                                 (str(self.date_time[idx].day) + "-" +
+                                  str(self.date_time[idx].month) + "-"  +
+                                  str(self.date_time[idx].year)),
+                                 # hour:minute:seconbd
+                                (str(self.date_time[idx].hour) + ":" +
+                                 str(self.date_time[idx].minute) + ":"  +
+                                 str(self.date_time[idx].second)),
+                                int(self.channel[idx]) + (chan ) * 10 ,
+                                self.intensity[idx], self.interval[idx]])
         f.close()
 
 

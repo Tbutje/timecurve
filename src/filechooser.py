@@ -19,3 +19,16 @@ def askopenfilename():
 
     # open file on your own
     return filename
+
+def asksavefilename():
+
+    file_opt = options = {}
+    options['defaultextension'] = '.csv'
+    options['filetypes'] = [('all files', '.*'), ('csv files', '.csv')]
+    options['initialdir'] = os.getcwd()
+    options['initialfile'] = 'timecurve.csv'
+    options['title'] = 'choose file'
+
+    filename = tkFileDialog.asksaveasfilename(**file_opt)
+
+    return filename
