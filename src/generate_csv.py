@@ -1,10 +1,13 @@
-import csv, tkMessageBox, sys
-from datetime import datetime, timedelta
-# from gui import MyDialog
+import csv
+import datetime
+import sys
+import tkMessageBox
 
+
+
+# from gui import MyDialog
 # add "prof" as command line argument to profile program
 ######### profiling options ###################################################
-
 if "prof" in sys.argv:
     profile = True
 else:
@@ -23,7 +26,7 @@ class Generate_csv(object):
     def __init__(self, input_file, year, month, day, hour, minute, second):
         self.input_file = input_file
         self.outputt_file = ""
-        self.start = datetime(year = year, month  = month, day = day, hour = hour, minute = minute,
+        self.start = datetime.datetime(year = year, month  = month, day = day, hour = hour, minute = minute,
                 second = second)
         self.date_time = []
         self.channel = []
@@ -41,7 +44,7 @@ class Generate_csv(object):
                 next(reader, None)
                 try:
                     for row in reader:
-                        new = self.start + timedelta(hours = int(row[0]), minutes = int(row[1]), seconds = int(row[2]))
+                        new = self.start + datetime.timedelta(hours = int(row[0]), minutes = int(row[1]), seconds = int(row[2]))
                         self.date_time.append(new)
                         self.channel.append(row[3])
                         self.intensity.append(row[4])

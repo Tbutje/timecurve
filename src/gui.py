@@ -1,8 +1,16 @@
-import Tkinter, tkMessageBox, csv, sys
-from generate_csv import Generate_csv
-from datetime import datetime
-from dialog_filechooser import askopenfilename
+import Tkinter
+import csv
+import datetime
+import sys
+import tkMessageBox
 
+import filechooser
+import generate_csv
+
+
+# import generate_csv import Generate_csv
+# from datetime import datetime
+# from dialog_filechooser import askopenfilename
 class Gui(Tkinter.Tk):
     def __init__(self,parent):
         Tkinter.Tk.__init__(self,parent)
@@ -45,7 +53,7 @@ class Gui(Tkinter.Tk):
         self.labelVariable.set("Time curve program")
 
         # LABELS & BUTTONS
-    #    Tkinter.Label(self, text="input file:").grid(row=0, sticky= "we")
+
         Tkinter.Label(self, text="output file:").grid(row=1)
         Tkinter.Label(self, text="").grid(row=2)
 
@@ -114,13 +122,13 @@ class Gui(Tkinter.Tk):
             second = int(self.second.get())
 
             # do the read and write stuff
-            data = Generate_csv(f_in, year, month, day, hour, minute, second)
+            data = generate_csv.Generate_csv(f_in, year, month, day, hour, minute, second)
             data.create()
             data.write(output)
             # store values in config
 
             self.labelVariable.set("Time curve generated at " +
-                                    datetime.now().strftime("%X"))
+                                    datetime.datetime.now().strftime("%X"))
             self.save_settings()
         # wrong values
         except ValueError:
@@ -162,7 +170,7 @@ class Gui(Tkinter.Tk):
 
     def select_input(self):
 
-        name = askopenfilename()
+        name = filechooser.askopenfilename()
         self.input.delete(0, Tkinter.END)
         self.input.insert(0,name)
 
