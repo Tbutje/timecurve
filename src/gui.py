@@ -1,8 +1,7 @@
-import Tkinter, tkMessageBox, csv
+import Tkinter, tkMessageBox, csv, sys
 from generate_csv import Generate_csv
-import sys
 from datetime import datetime
-from dialog_filechooser import FileDialogExample
+from dialog_filechooser import askopenfilename
 
 class Gui(Tkinter.Tk):
     def __init__(self,parent):
@@ -57,8 +56,8 @@ class Gui(Tkinter.Tk):
         Tkinter.Label(self, text="minute :").grid(row=7)
         Tkinter.Label(self, text="second :").grid(row=8)
         label.grid(column=0,row=9,columnspan=2,sticky='WE')
-        button_a.grid(column=0,row=10,sticky= "WE")
-        button_q.grid(column=1,row=10, sticky= "WE")
+        button_a.grid(column=0,row=10,sticky= "W")
+        button_q.grid(column=1,row=10, sticky= "W")
         select_input.grid(row = 0, column = 0, sticky = "WE")
 
         # INPUT
@@ -73,30 +72,30 @@ class Gui(Tkinter.Tk):
         self.second = Tkinter.Entry(self)
 
 
-        self.input.grid(row=0, column=1)
+        self.input.grid(row=0, column=1, columnspan=2,sticky='WE')
         self.input.insert(0, self.mydict.get("input", "input.csv"))
-        self.output.grid(row=1, column=1)
+        self.output.grid(row=1, column=1, columnspan=2,sticky='WE')
         self.output.insert(0, self.mydict.get("output", "output.csv"))
 
-        self.year.grid(row=3, column=1)
+        self.year.grid(row=3, column=1,sticky='W')
         self.year.insert(0, self.mydict.get("year", "2000"))
-        self.month.grid(row=4, column=1)
+        self.month.grid(row=4, column=1,sticky='W')
         self.month.insert(0,self.mydict.get("month", "1"))
-        self.day.grid(row=5, column=1)
+        self.day.grid(row=5, column=1,sticky='W')
         self.day.insert(0,self.mydict.get("day", "1"))
-        self.hour.grid(row=6, column=1)
+        self.hour.grid(row=6, column=1,sticky='W')
         self.hour.insert(0,self.mydict.get("hour", "1"))
-        self.minute.grid(row=7, column=1)
+        self.minute.grid(row=7, column=1,sticky='W')
         self.minute.insert(0,self.mydict.get("minute", "1"))
-        self.second.grid(row=8, column=1)
+        self.second.grid(row=8, column=1,sticky='W')
         self.second.insert(0,self.mydict.get("second", "1"))
 
 
 
         # stuf to make it resizable, or not
-        self.grid_columnconfigure(0,weight=1)
+        self.grid_columnconfigure(1,weight=10)
         # Horizondat x vertical resize
-        self.resizable(False,False)
+        self.resizable(True,False)
         return self.input.focus()
 
 
@@ -104,7 +103,7 @@ class Gui(Tkinter.Tk):
     def apply(self, *args):
 
         try:
-            input = self.input.get()
+            f_in = self.input.get()
             open(input, 'rb')
             output = self.output.get()
             year = int(self.year.get())
@@ -115,7 +114,7 @@ class Gui(Tkinter.Tk):
             second = int(self.second.get())
 
             # do the read and write stuff
-            data = Generate_csv(input, year, month, day, hour, minute, second)
+            data = Generate_csv(f_in, year, month, day, hour, minute, second)
             data.create()
             data.write(output)
             # store values in config
@@ -144,17 +143,28 @@ class Gui(Tkinter.Tk):
         self.destroy()
 
     def save_settings(self):
-        with open("conf.cfg", 'w') as file:
-            writer = csv.writer(file)
-            writer.writerows([("input", self.input), ("output", self.output), ("year", self.year),
-            ("month", self.month), ("day", self.day), ("hour", self.hour), ("minute", self.minute),
-            ("second", self.second)])
+
+        f_in = self.input.get()
+        open(input, 'rb')
+        output = self.output.get()
+        year = int(self.year.get())
+        month = int(self.month.get())
+        day = int(self.day.get())
+        hour = int(self.hour.get())
+        minute = int(self.minute.get())
+        second = int(self.second.get())
+
+        with open("conf.cfg", 'w') as f:
+            writer = csv.writer(f)
+            writer.writerows([("input", f_in), ("output", output), ("year", year),
+            ("month", month), ("day", day), ("hour", hour), ("minute", minute),
+            ("second", second)])
 
     def select_input(self):
-        TkFileDialogExample(root).pack()
-       # name = FileDialogExample()
-        #self.input.insert(0,name)
 
+        name = askopenfilename()
+        self.input.delete(0, Tkinter.END)
+        self.input.insert(0,name)
 
 if __name__ == "__main__":
     app = Gui(None)

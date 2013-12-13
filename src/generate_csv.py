@@ -1,5 +1,4 @@
-import csv, tkMessageBox
-from Tkinter import *
+import csv, tkMessageBox, sys
 from datetime import datetime, timedelta
 # from gui import MyDialog
 
@@ -42,7 +41,6 @@ class Generate_csv(object):
                 next(reader, None)
                 try:
                     for row in reader:
-                        #TODO: make it give error when non numeric input
                         new = self.start + timedelta(hours = int(row[0]), minutes = int(row[1]), seconds = int(row[2]))
                         self.date_time.append(new)
                         self.channel.append(row[3])
@@ -67,8 +65,11 @@ class Generate_csv(object):
 
         self.output_file = output_file
         # write out stuff away
-        f = open(self.output_file, "wb")
-        writer = csv.writer(file)
+        try:
+            f = open(self.output_file, "wb")
+        except:
+            raise Exception("could not open output file")
+        writer = csv.writer(f)
         writer.writerow(["date(dd-mm-yyy)","time(hh:mm:ss)","channel(1-40)",
                 "intensity(%)","interval(sec.)"])
 
@@ -83,6 +84,7 @@ class Generate_csv(object):
                                 (str(self.date_time[idx].hour) + ":" +  str(self.date_time[idx].minute) + ":"  + str(self.date_time[idx].second)),
                                 int(self.channel[idx]) + (chan ) * 10 , self.intensity[idx], self.interval[idx]])
         f.close()
+
 
     ######### profiling options ###################################################
         if profile:
